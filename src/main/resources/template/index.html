@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>条件查询带分页</title>
+    <style>
+        .panel-title {
+            padding: 12px 0;
+        }
+
+        .table {
+            text-align: center;
+        }
+    </style>
+    <!--1.引入bs的css样式-->
+    <link rel="stylesheet" href="../static/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <!--2.引入jquery-->
+    <script src="../static/node_modules/jquery/jquery.min.js"></script>
+    <!--3.引入bs的js库-->
+    <script src="../static/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!--4.引入vue库-->
+    <script src="../static/node_modules/vue/vue.min.js"></script>
+    <!--5.引入axios库-->
+    <script src="../static/node_modules/axios/axios.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="page-header">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Maven+SSM+Vue+BootStrap</h3>
+            </div>
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <td>学号</td>
+                    <td>姓名</td>
+                    <td>性别</td>
+                    <td>年龄</td>
+                    <td>住址</td>
+                    <td>所在班级</td>
+                    <td>操作</td>
+                </tr>
+                <tr v-for="stud in students">
+                    <td>{{stud.sid}}</td>
+                    <td>{{stud.sname}}</td>
+                    <td>{{stud.sex}}</td>
+                    <td>{{stud.age}}</td>
+                    <td>{{stud.addr}}</td>
+                    <td>{{stud.cname}}</td>
+                    <td>
+                        <a href="#" class="btn btn-success">修改</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="7">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <li>
+                                    <a href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li v-for="p in totalPage" :class="{active:p==page}">
+                                    <a href="#" @click="skipPage(p)">{{p}}</a>
+                                </li>
+                                <li>
+                                    <a href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </td>
+                </tr>
+            </table>
+            <div class="panel-footer text-left">
+                <form  class="form-inline" >
+                    <div class="form-group">
+                        <input type="text" class="form-control" v-model="searchEntity.sname"
+                               placeholder="要查询的学生姓名">
+                        <input type="text" class="form-control" v-model="searchEntity.addr"
+                               placeholder="要查询的学生住址">
+                        <select v-model="searchEntity.cid" class="form-control">
+                            <option value="0">所有班级</option>
+                            <option v-for="c in classes" :value="c.cid">{{c.cname}}</option>
+
+                        </select>
+                        <a href="#" class="btn btn-default btn-sm" @click="search(1)">查询</a>
+                    </div>
+                    <span class="pull-right">
+                    泥痕.
+                    </span>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script>
+    let ls = new Vue({
+        el:'.container',
+        data:{
+            students:[],            //学生列表
+            classes:[],             //班级列表
+            pageSize: 5,            //每页大小
+            totalPage:0,            //总页数
+            page:1,                 //当前页
+            searchEntity:{}
+        },
+        mounted(){
+            // //1.分页查询学生
+            // this.findByPage(1);
+            //2.查询所有班级
+            this.findClasses();
+        //     //3.条件带分页查询
+            this.search(1);
+        },
+        methods:{
+            //1.分页查询学生
+            findByPage(page){
+                axios.post("/student/findByPage.do?page="+page + "&pageSize="+this.pageSize).then(resp=>{
+                    this.students = resp.data.rows;
+                    //设置总页数
+                    this.totalPage = resp.data.totalPage;
+                    //设置当前页
+                    this.page = resp.data.page;
+                })
+            },
+            //2.查询所有班级
+            findClasses(){
+                axios.get("/classes/list").then(resp=>{
+                    this.classes = resp.data;
+                })
+            },
+            //3.点击页码按钮跳转到某一页
+            skipPage(p){
+                //3.1)开始分页查询
+                //this.findByPage(p);
+                //3.2)条件查询带分页
+                this.search(p);
+            },
+            //4.条件查询学生信息并分页
+            search(p){
+                axios.post("/student/search?page="+p+"&pageSize="+this.pageSize,this.searchEntity).then(resp=>{
+                    //4.1)得到当前页学生列表
+                    this.students = resp.data.rows;
+                    //4.2)得到总页数
+                    this.totalPage = resp.data.totalPage;
+                    //4.3)设置当前页
+                    this.page = resp.data.page;
+                    //这里默认下拉框为0，显示所有班级
+                    this.searchEntity.cid = 0;
+                })
+            }
+
+        }
+    })
+</script>

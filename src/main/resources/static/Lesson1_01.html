@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>jquery的常用选择器</title>
+    <style>
+
+    </style>
+    <!-- 1.引入jquery的库 -->
+<!--    <script src="js/jquery-1.12.4.min.js"></script>-->
+    <!--2.引入jquery-->
+    <script src="node_modules/jquery/jquery.min.js"></script>
+    <!-- 2.自定义js代码 -->
+    <script>
+        $(function(){
+           //1.标签选择器 (参数1：属性名，参数2：属性值)
+           $("p").css("backgroundColor","red");
+           //2.类别选择器
+           $(".t").css("backgroundColor","lightgreen"); 
+           //3.id选择器
+           //写样式属性名时，可以使用样式属性名，也可以使用js访问的样式名（驼峰式命名法）
+           $("#p2").css({"text-align":"center","fontSize":"25px"}); 
+            //4.根据序号选择
+            //4.1)选择一组元素的第一个
+            $("ul li:first").css({"background":"orange","width":"300px"});
+            //4.2)选择一组元素的最后一个
+            $("ul li:last").css({"width":"300px","background":"pink"});
+            //4.3)更改偶数个的元素(下标从0开始)
+            $("ul li:even").css("color","blue");
+            //4.4)更改奇数个元素
+            $("ul li:odd").css("color","red");
+            //4.5)更改指定位置元素
+            $("ul li:eq(1)").css("color","green");
+            //4.6)更改比指定元素位置大的元素
+            $("ul li:gt(1)").css("textDecoration","underline");
+            //4.7)更改比指定元素位置小的元素
+            $("ul li:lt(3)").css("fontFamily","华文行楷");
+            //5.根据属性选择：
+            //5.1)根据属性等于指定值选择
+            $("input[name=addr]").css("background","lightyellow");
+            //5.2)以指定字符开头
+            $("input[type*=t]").css("background","lightpink");
+            //5.3)以指定字符结尾
+            $("input[name$=e]").css("color","blue");
+            //5.4)以指定字符开头
+            $("input[name^=a]").css("color","green");
+            //5.5)不包含指定字符
+            $("input[name!=d]").css("fontStyle","italic")
+            //5.6)选择不以指定字符开头的元素
+            $("input").not("input[name^=u]").css("textDecoration","underline");
+            //6.特殊的表单操作操作(attr()方法：参数1:代表要设置的属性名，参数2：代表属性值)
+            $("input[name=habby]").first().attr("checked",true);
+            $("input[name=habby]:eq(2)").attr("checked",true);
+            $(":checked").attr("checked",false);   //取消选择
+            
+        })
+        // $(function(){
+
+        // })
+        //相当于下面的写法（原生的onload事件）：
+        //$(document).ready(function(){
+            // 在这里写你的代码...
+        //});
+    </script>
+</head>
+<body>
+    <p>段落一</p>
+    <p class="t" id="p2">段落二</p>
+    <p class="t">段落三</p>
+    <ul>
+        <li>语文</li>
+        <li>数学</li>
+        <li>英语</li>
+        <li>物理</li>
+        <li>化学</li>
+    </ul>
+    <form action="">
+        姓名：<input type="text" name="username"> <br>
+        密码：<input type="password" name="password"> <br>
+        爱好：
+        <input type="checkbox" value="游泳" name="habby">游泳
+        <input type="checkbox" value="打球" name="habby" >打球
+        <input type="checkbox" value="下棋" name="habby">下棋
+        <input type="checkbox" value="写代码" name="habby">写代码
+        <br>
+        图片：<input type="file" name="uploadfile"> <br>
+        地址：<input type="text" name="addr"> <br>
+        <input type="submit" value="提交"> <br>
+
+    </form>
+</body>
+</html>
