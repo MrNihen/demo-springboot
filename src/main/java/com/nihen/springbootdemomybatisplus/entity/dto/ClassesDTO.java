@@ -2,6 +2,8 @@ package com.nihen.springbootdemomybatisplus.entity.dto;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -26,11 +28,13 @@ public class ClassesDTO implements Serializable {
     /**
      * 班级编号
      */
+    @ApiModelProperty("班级编号")
     private Long cid;
 
     /**
      * 班级名称
      */
+    @ApiModelProperty("班级名称")
     private String cname;
 
 
