@@ -5,6 +5,9 @@ import com.nihen.springbootdemomybatisplus.entity.dto.ClassesDTO;
 import com.nihen.springbootdemomybatisplus.service.IClassesService;
 import com.nihen.springbootdemomybatisplus.util.Result;
 import com.nihen.springbootdemomybatisplus.util.StatusCode;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +21,7 @@ import java.util.List;
  * @author admin
  * @since 2021-12-16
  */
+@Api("班级控制器类")
 @RestController
 @RequestMapping("/classes")
 public class ClassesController {
@@ -30,8 +34,9 @@ public class ClassesController {
      * @param classesDTO
      * @return Result
      */
+    @ApiOperation("添加班级")
     @PostMapping("/add")
-    public Result add(@RequestBody ClassesDTO classesDTO){
+    public Result add(@ApiParam("classesDTO") @RequestBody ClassesDTO classesDTO){
         try {
             classesService.add(classesDTO);
             return new Result(StatusCode.OK,true,"添加班级信息成功！");
@@ -45,6 +50,7 @@ public class ClassesController {
      * 查询所有班级
      * @return com.nihen.springbootdemomybatisplus.util.Result
      */
+    @ApiOperation("查询所有班级")
     @GetMapping("/findAll")
     public Result findAll(){
         try {
@@ -61,8 +67,9 @@ public class ClassesController {
      * @param pageSize
      * @return Result
      */
-    @GetMapping("/findByPage")
-    public Result findByPage(@RequestParam Integer pageNo, @RequestParam Integer pageSize){
+    @ApiOperation("分页查询所有班级")
+    @PostMapping("/findByPage")
+    public Result findByPage(@ApiParam("pageNo") @RequestParam Integer pageNo,@ApiParam("pageSize") @RequestParam Integer pageSize){
         try {
             return new Result(StatusCode.OK,true,"分页查询所有班级信息成功！",classesService.findByPage(pageNo,pageSize));
         } catch (Exception e) {
@@ -78,8 +85,9 @@ public class ClassesController {
      * @param classesDTO
      * @return Result
      */
-    @GetMapping("/searchByPage")
-    public Result searchByPage(@RequestParam Integer pageNo,@RequestParam Integer pageSize,@RequestBody ClassesDTO classesDTO){
+    @ApiOperation("模糊查询带分页")
+    @PostMapping("/searchByPage")
+    public Result searchByPage(@ApiParam("pageNo") @RequestParam Integer pageNo,@ApiParam("pageSize") @RequestParam Integer pageSize,@ApiParam("classesDTO") @RequestBody ClassesDTO classesDTO){
         try {
             return new Result(StatusCode.OK,true,"分页模糊查询所有班级信息成功！",classesService.searchByPage(pageNo,pageSize,classesDTO));
         } catch (Exception e) {
@@ -94,8 +102,9 @@ public class ClassesController {
      * @param classesDTO
      * @return Result
      */
+    @ApiOperation("根据id修改班级信息")
     @PostMapping("/updateClasses")
-    public Result updateClasses(@RequestBody ClassesDTO classesDTO){
+    public Result updateClasses(@ApiParam("classesDTO") @RequestBody ClassesDTO classesDTO){
         try {
             classesService.updateClasses(classesDTO);
             return new Result(StatusCode.OK,true,"修改班级信息成功！");
@@ -110,8 +119,9 @@ public class ClassesController {
      * @param ids
      * @return Result
      */
-    @DeleteMapping("/delectClasses")
-    public Result delectClassesByIds(@RequestParam Long[] ids){
+    @ApiOperation("根据id删除班级信息")
+    @PostMapping("/delectClasses")
+    public Result delectClassesByIds(@ApiParam("ids") @RequestParam Long[] ids){
         try {
             classesService.delectClassesByIds(ids);
             return new Result(StatusCode.OK,true,"删除班级信息成功！");
@@ -121,10 +131,15 @@ public class ClassesController {
         }
     }
 
+    /**
+     * 根据id查找一个班级信息
+     * @return
+     */
+    @ApiOperation("根据id查找一个班级信息")
     @GetMapping("/findOne")
-    public Result findOne(){
+    public Result findOne(@ApiParam("cid") @RequestParam Long cid){
         try {
-            return new Result(StatusCode.OK,true,"查找一个班级信息成功！", classesService.findOne());
+            return new Result(StatusCode.OK,true,"查找一个班级信息成功！", classesService.findOne(cid));
         } catch (Exception e) {
             e.printStackTrace();
             return new Result(StatusCode.OK,true,"查找一个班级信息失败！");
