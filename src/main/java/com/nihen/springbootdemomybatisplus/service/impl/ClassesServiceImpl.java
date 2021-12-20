@@ -46,10 +46,10 @@ public class ClassesServiceImpl extends ServiceImpl<ClassesMapper, Classes> impl
 
     @Override
     public List<ClassesVO> findAll() {
-        ClassesVO classesVO = new ClassesVO();
         List<ClassesVO> classesVOList = new ArrayList<>();
         List<Classes> classesList = classesMapper.selectList(null);
         for (Classes classes : classesList){
+            ClassesVO classesVO = new ClassesVO();
            classesVO.setCid(classes.getCid());
            classesVO.setCname(classes.getCname());
            classesVOList.add(classesVO);
@@ -60,7 +60,7 @@ public class ClassesServiceImpl extends ServiceImpl<ClassesMapper, Classes> impl
 
     @Override
     public PageSelectDTO<ClassesVO> findByPage(Integer pageNo, Integer pageSize) {
-        log.info("findAll from pageNo ={},pageSize ={}",pageNo,pageSize);
+        log.info("findByPage from pageNo ={},pageSize ={}",pageNo,pageSize);
         //新建分页结果对象
         PageSelectDTO<ClassesVO> classesVOPageSelectDTO = new PageSelectDTO<>();
         //构造分页对象
@@ -73,21 +73,22 @@ public class ClassesServiceImpl extends ServiceImpl<ClassesMapper, Classes> impl
         classesVOPageSelectDTO.setPageSize((int) classesIPage.getSize());
         //总记录数
         classesVOPageSelectDTO.setPageTotal(classesIPage.getTotal());
-        //新建classesVO对象
-        ClassesVO classesVO = new ClassesVO();
         //新建返回的ClassesVO列表集合
         List<ClassesVO> classesVOList = new ArrayList<>();
         //遍历分页Classes集合
         for (Classes classes : classesIPage.getRecords()){
+            //新建classesVO对象
+            ClassesVO classesVO = new ClassesVO();
             //构造返回对象
             classesVO.setCid(classes.getCid());
             classesVO.setCname(classes.getCname());
+            log.info("findByPage start classesVO ={}",classesVO);
             //把返回对象放到返回集合中
             classesVOList.add(classesVO);
+            log.info("findByPage start classesVOList ={}",classesVOList);
         }
         //把返回集合放在返回结果对象中
         classesVOPageSelectDTO.setList(classesVOList);
-        log.info("findAll start classesVOList ={}",classesVOList);
         //返回结果对象
         return classesVOPageSelectDTO;
     }
@@ -98,9 +99,9 @@ public class ClassesServiceImpl extends ServiceImpl<ClassesMapper, Classes> impl
         log.info("searchByPage from pageNo ={},pageSize ={},ClassesDTO ={}",pageNo,pageSize,classesDTO);
         //新建分页结果对象
         PageSelectDTO<ClassesVO> classesVOPageSelectDTO = new PageSelectDTO<>();
-        //构造搜索条件
+        //构造搜索条件 like(Classes::getCname,classesDTO.getCname()
         LambdaQueryWrapper<Classes> classesLambdaQueryWrapper = Wrappers.lambdaQuery();
-        classesLambdaQueryWrapper.eq(Classes::getCid,classesDTO.getCid()).or().like(Classes::getCname,classesDTO.getCname());
+        classesLambdaQueryWrapper.eq(Classes::getCid,classesDTO.getCid()).or().eq(Classes::getCname,classesDTO.getCname());
         //构造分页对象
         IPage<Classes> classesIPage = new Page<>(pageNo,pageSize);
         //开始分页
@@ -111,12 +112,12 @@ public class ClassesServiceImpl extends ServiceImpl<ClassesMapper, Classes> impl
         classesVOPageSelectDTO.setPageSize((int) classesIPage.getSize());
         //总记录数
         classesVOPageSelectDTO.setPageTotal(classesIPage.getTotal());
-        //新建classesVO对象
-        ClassesVO classesVO = new ClassesVO();
         //新建返回的ClassesVO列表集合
         List<ClassesVO> classesVOList = new ArrayList<>();
         //遍历分页Classes集合
         for (Classes classes : classesIPage.getRecords()){
+            //新建classesVO对象
+            ClassesVO classesVO = new ClassesVO();
             //构造返回对象
             classesVO.setCid(classes.getCid());
             classesVO.setCname(classes.getCname());
@@ -160,8 +161,11 @@ public class ClassesServiceImpl extends ServiceImpl<ClassesMapper, Classes> impl
      * @return
      */
     @Override
-    public ClassesVO findOne() {
-        Classes classes = classesMapper.selectOne(null);
+    public ClassesVO findOne(Long cid) {
+        //构造搜索条件
+        LambdaQueryWrapper<Classes> classesLambdaQueryWrapper = Wrappers.lambdaQuery();
+        classesLambdaQueryWrapper.eq(Classes::getCid,cid);
+        Classes classes = classesMapper.selectOne(classesLambdaQueryWrapper);
         ClassesVO classesVO = new ClassesVO();
         classesVO.setCid(classes.getCid());
         classesVO.setCname(classes.getCname());

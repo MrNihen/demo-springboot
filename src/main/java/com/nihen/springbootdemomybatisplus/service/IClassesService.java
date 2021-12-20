@@ -63,5 +63,5 @@ public interface IClassesService extends IService<Classes> {
      * 查找一个班级信息
      * @return ClassesVO
      */
-    ClassesVO findOne();
+    ClassesVO findOne(Long cid);
 }
