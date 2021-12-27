@@ -11,7 +11,6 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 /**
  * <p>
@@ -31,7 +30,7 @@ public class ClassesController {
 
     /**
      * 添加班级
-     * @param classesDTO
+     * @param classesDTO 班级传输实体
      * @return Result
      */
     @ApiOperation("添加班级")
@@ -63,8 +62,8 @@ public class ClassesController {
 
     /**
      *  分页查询所有班级
-     * @param pageNo
-     * @param pageSize
+     * @param pageNo 当前页
+     * @param pageSize 每页大小
      * @return Result
      */
     @ApiOperation("分页查询所有班级")
@@ -80,9 +79,9 @@ public class ClassesController {
 
     /**
      * 模糊查询带分页
-     * @param pageNo
-     * @param pageSize
-     * @param classesDTO
+     * @param pageNo 当前页
+     * @param pageSize 每页大小
+     * @param classesDTO 班级传输实体
      * @return Result
      */
     @ApiOperation("模糊查询带分页")
@@ -99,7 +98,7 @@ public class ClassesController {
 
     /**
      * 根据id修改班级信息
-     * @param classesDTO
+     * @param classesDTO 班级传输实体
      * @return Result
      */
     @ApiOperation("根据id修改班级信息")
@@ -116,14 +115,14 @@ public class ClassesController {
 
     /**
      * 根据id删除班级信息
-     * @param ids
+     * @param ids 班级id数组
      * @return Result
      */
     @ApiOperation("根据id删除班级信息")
     @PostMapping("/delectClasses")
     public Result delectClassesByIds(@ApiParam("ids") @RequestParam Long[] ids){
         try {
-            classesService.delectClassesByIds(ids);
+            classesService.deleteClassesByIds(ids);
             return new Result(StatusCode.OK,true,"删除班级信息成功！");
         } catch (Exception e) {
             e.printStackTrace();
@@ -133,7 +132,7 @@ public class ClassesController {
 
     /**
      * 根据id查找一个班级信息
-     * @return
+     * @return 班级信息
      */
     @ApiOperation("根据id查找一个班级信息")
     @GetMapping("/findOne")

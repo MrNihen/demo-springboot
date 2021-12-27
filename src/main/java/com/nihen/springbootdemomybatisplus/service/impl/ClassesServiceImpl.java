@@ -25,7 +25,7 @@ import java.util.List;
  *  班级服务实现类
  * </p>
  *
- * @author admin
+ * @author nihen
  * @since 2021-12-16
  */
 @Log4j2
@@ -131,10 +131,6 @@ public class ClassesServiceImpl extends ServiceImpl<ClassesMapper, Classes> impl
         return classesVOPageSelectDTO;
     }
 
-    /**
-     * 修改班级
-     * @param classesDTO
-     */
     @Override
     public void updateClasses(ClassesDTO classesDTO) {
         Classes classes = new Classes();
@@ -143,12 +139,8 @@ public class ClassesServiceImpl extends ServiceImpl<ClassesMapper, Classes> impl
         classesMapper.updateById(classes);
     }
 
-    /**
-     * 根据ID删除班级信息
-     * @param ids
-     */
     @Override
-    public void delectClassesByIds(Long[] ids) {
+    public void deleteClassesByIds(Long[] ids) {
         log.info("delectClassesByIds start ids ={}",ids);
         //高效数组转list集合
         ArrayList<Long> longList = new ArrayList<>(ids.length);
@@ -156,10 +148,6 @@ public class ClassesServiceImpl extends ServiceImpl<ClassesMapper, Classes> impl
         classesMapper.deleteBatchIds(longList);
     }
 
-    /**
-     * 查找一个班级信息
-     * @return
-     */
     @Override
     public ClassesVO findOne(Long cid) {
         //构造搜索条件

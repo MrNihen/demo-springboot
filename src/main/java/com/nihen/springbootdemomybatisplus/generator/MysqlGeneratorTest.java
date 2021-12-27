@@ -10,10 +10,11 @@ import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import org.junit.Test;
 
-import java.util.Random;
 
-
-public class MysqlGenerator {
+/**
+ * @author zhuguanglong
+ */
+public class MysqlGeneratorTest {
     
     @Test
     public void generate() {
@@ -24,7 +25,7 @@ public class MysqlGenerator {
         String projectPath = System.getProperty("user.dir");
         // 设置输出到的目录
         config.setOutputDir(projectPath + "/src/main/java");
-        config.setAuthor("admin");
+        config.setAuthor("zhuguanglong");
         // 生成结束后是否打开文件夹
         config.setOpen(false);
 

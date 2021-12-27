@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * 分页结果
- * @Author admin
+ * @author admin
  */
 @Data
 public class PageSelectDTO<T> {

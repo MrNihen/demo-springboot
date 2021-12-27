@@ -39,7 +39,7 @@ public class StudentController {
 
     /**
      * 添加学生
-     * @param studentDTO
+     * @param studentDTO 学生传输实体
      * @return Result
      */
     @PostMapping("/addStudent")

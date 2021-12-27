@@ -25,7 +25,7 @@ public interface IStudentService extends IService<Student> {
 
     /**
      * 添加学生
-     * @param studentDTO
+     * @param studentDTO 学生传输实体
      */
     void addStudent(StudentDTO studentDTO);
 }
