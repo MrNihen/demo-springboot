@@ -52,5 +52,11 @@ public class StudentDTO implements Serializable {
     @ApiModelProperty("学生地址")
     private String addr;
 
+    /**
+     * 学生所在班级
+     */
+    @ApiModelProperty("学生所在班级")
+    private String cname;
+
 
 }

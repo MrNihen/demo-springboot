@@ -133,9 +133,11 @@ public class ClassesServiceImpl extends ServiceImpl<ClassesMapper, Classes> impl
 
     @Override
     public void updateClasses(ClassesDTO classesDTO) {
+        log.info("classesDTO start classesDTO ={}",classesDTO);
         Classes classes = new Classes();
         classes.setCid(classesDTO.getCid());
         classes.setCname(classesDTO.getCname());
+        log.info("classes start classes ={}",classes);
         classesMapper.updateById(classes);
     }
 
