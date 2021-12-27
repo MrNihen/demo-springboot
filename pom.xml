@@ -19,6 +19,15 @@
 		<swagger.version>1.9.6</swagger.version>
 		<vertx.core.version>4.1.3</vertx.core.version>
 		<javax.servlet>4.0.1</javax.servlet>
+		<mysql.version>8.0.21</mysql.version>
+		<hutool.version>5.3.8</hutool.version>
+		<mybatis-plus-core.version>3.3.0</mybatis-plus-core.version>
+		<mybatis-plus.version>3.3.0</mybatis-plus.version>
+		<lombok.version>1.18.16</lombok.version>
+		<druid.version>1.1.20</druid.version>
+		<fastjson.version>1.2.31</fastjson.version>
+		<mybatis-plus-generator.version>3.3.0</mybatis-plus-generator.version>
+		<junit.version>4.13.2</junit.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -28,7 +37,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-			<version>2.5.7</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -38,59 +46,53 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.21</version>
+			<version>${mysql.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-all</artifactId>
-			<version>5.3.8</version>
+			<version>${hutool.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.baomidou</groupId>
 			<artifactId>mybatis-plus-core</artifactId>
-			<version>3.3.0</version>
+			<version>${mybatis-plus-core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.baomidou</groupId>
 			<artifactId>mybatis-plus-boot-starter</artifactId>
-			<version>3.3.0</version>
+			<version>${mybatis-plus.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.16</version>
+			<version>${lombok.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>druid</artifactId>
-			<version>1.1.20</version>
+			<version>${druid.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
-			<version>1.2.31</version>
+			<version>${fastjson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.baomidou</groupId>
 			<artifactId>mybatis-plus-generator</artifactId>
-			<version>3.3.0</version>
+			<version>${mybatis-plus-generator.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13.2</version>
+			<version>${junit.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-freemarker</artifactId>
 		</dependency>
-
-		<!-- swagger -->
-<!--		<dependency>-->
-<!--			<groupId>io.springfox</groupId>-->
-<!--			<artifactId>springfox-swagger2</artifactId>-->
-<!--			<version>2.9.2</version>-->
-<!--		</dependency>-->
+		<!--添加swagger配置-->
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-boot-starter</artifactId>
@@ -113,7 +115,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>2.5.3</version>
 			</plugin>
 		</plugins>
 	</build>
