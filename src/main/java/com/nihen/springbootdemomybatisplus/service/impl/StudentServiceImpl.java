@@ -2,7 +2,9 @@ package com.nihen.springbootdemomybatisplus.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.nihen.springbootdemomybatisplus.entity.dto.StudentDTO;
 import com.nihen.springbootdemomybatisplus.entity.po.Classes;
@@ -13,9 +15,11 @@ import com.nihen.springbootdemomybatisplus.mapper.ClassesMapper;
 import com.nihen.springbootdemomybatisplus.mapper.StudentClassesMapper;
 import com.nihen.springbootdemomybatisplus.mapper.StudentMapper;
 import com.nihen.springbootdemomybatisplus.service.IStudentService;
+import com.nihen.springbootdemomybatisplus.util.PageSelectDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.ArrayList;
@@ -41,7 +45,6 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
     @Autowired
     private ClassesMapper classesMapper;
-
 
     @Override
     public List<StudentVO> studentList() {
@@ -78,6 +81,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         return studentVOList;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void addStudent(StudentDTO studentDTO) {
         log.info("studentDTO start studentDTO={}",studentDTO);
@@ -118,6 +122,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         studentClassesMapper.insert(studentClasses);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateStudent(StudentDTO studentDTO) {
         log.info("studentDTO end studentDTO={}",studentDTO);
@@ -144,7 +149,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
             studentClassesLambdaQueryWrapper.eq(StudentClasses::getSid,studentDTO.getSid());
             studentClasses.setId(studentClassesMapper.selectOne(studentClassesLambdaQueryWrapper).getId());
             studentClasses.setSid(studentDTO.getSid());
-            Classes classes = new Classes();
+            log.info("studentClasses start studentClasses={}",studentClasses);
             LambdaQueryWrapper<Classes> classesLambdaQueryWrapper = Wrappers.lambdaQuery();
             classesLambdaQueryWrapper.eq(Classes::getCname,studentDTO.getCname());
             studentClasses.setCid(classesMapper.selectOne(classesLambdaQueryWrapper).getCid());
@@ -178,13 +183,13 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         }
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void deleteStudent(Long[] ids) {
         if (ids.length != 0){
             for (Long id : ids){
                 //删除学生信息
                 studentMapper.deleteById(id);
-
                 //构造搜索条件,
                 LambdaQueryWrapper<StudentClasses> studentClassesLambdaQueryWrapper = Wrappers.lambdaQuery();
                 studentClassesLambdaQueryWrapper.eq(StudentClasses::getSid,id);
@@ -192,6 +197,71 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
                 studentClassesMapper.delete(studentClassesLambdaQueryWrapper);
             }
         }
+    }
+
+    @Override
+    public PageSelectDTO<StudentVO> selectStudentByPage(Integer pageNo, Integer pageSize) {
+        log.info("selectStudentByPage from pageNo ={},pageSize ={}",pageNo,pageSize);
+        //新建分页结果对象
+        PageSelectDTO<StudentVO> pageSelectDTO = new PageSelectDTO<>();
+        //新建分页对象
+        IPage<Student> studentPage = new Page<>(pageNo,pageSize);
+        //开始分页
+        studentMapper.selectPage(studentPage,null);
+        //把分页属性放到分页DTO中
+        pageSelectDTO.setPageNo((int) studentPage.getCurrent());
+        pageSelectDTO.setPageSize((int) studentPage.getSize());
+        pageSelectDTO.setPageTotal(studentPage.getTotal());
+        log.info("pageSelectDTO start pageSelectDTO ={}",pageSelectDTO);
+        //新建要返回的前端学生集合
+        List<StudentVO> studentVOList = new ArrayList<>();
+        //循环设置学生VO属性
+        for (Student student : studentPage.getRecords()){
+            StudentVO studentVO = new StudentVO();
+            studentVO.setSid(student.getSid());
+            studentVO.setSex(student.getSex());
+            studentVO.setSname(student.getSname());
+            studentVO.setAge(student.getAge());
+            studentVO.setAddr(student.getAddr());
+            //创建中间表的查询条件
+            LambdaQueryWrapper<StudentClasses> wrapper = new LambdaQueryWrapper<>();
+            //根据sid查询cid
+            wrapper.eq(StudentClasses::getSid,student.getSid());
+            Long cid = studentClassesMapper.selectOne(wrapper).getCid();
+            log.info("cid start cid ={}",cid);
+            //创建班级信息表的查询条件
+            LambdaQueryWrapper<Classes> classesLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            //放入条件
+            classesLambdaQueryWrapper.eq(Classes::getCid,cid);
+            //查询班级表的班级名并放入学生VO中
+            studentVO.setCname(classesMapper.selectOne(classesLambdaQueryWrapper).getCname());
+            //把studentVO放入studentVOList中
+            log.info("studentVO start studentVO ={}",studentVO);
+            studentVOList.add(studentVO);
+            log.info("studentVOList start studentVOList ={}",studentVOList);
+        }
+        //把分页结果列表放入分页结果集List中
+        pageSelectDTO.setList(studentVOList);
+        log.info("pageSelectDTO start pageSelectDTO ={}",pageSelectDTO);
+        //返回分页结果对象
+        return pageSelectDTO;
+    }
+
+    @Override
+    public PageSelectDTO<StudentVO> searchStudentByPage(Integer pageNo, Integer pageSize, StudentDTO studentDTO) {
+        log.info("searchStudentByPage from pageNo ={},pageSize ={},studentDTO ={}",pageNo,pageSize,studentDTO);
+        //新建分页结果对象
+        PageSelectDTO<StudentVO> pageSelectDTO = new PageSelectDTO<>();
+        List<StudentVO> studentVOList = studentMapper.searchStudentByPage(pageNo,pageSize,studentDTO.getSid(),studentDTO.getSname(),studentDTO.getSex(),studentDTO.getAge(),studentDTO.getAddr(),studentDTO.getCname());
+        log.info("searchStudentByPage start studentVOList ={}",studentVOList);
+        //把分页结果列表放入分页结果集List中
+        pageSelectDTO.setPageNo(pageNo);
+        pageSelectDTO.setPageSize(pageSize);
+        pageSelectDTO.setPageTotal((long) studentVOList.size());
+        pageSelectDTO.setList(studentVOList);
+        log.info("pageSelectDTO start pageSelectDTO ={}",pageSelectDTO);
+        //返回分页结果对象
+        return pageSelectDTO;
     }
 
 }

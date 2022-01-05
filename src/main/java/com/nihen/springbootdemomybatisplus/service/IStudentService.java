@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.nihen.springbootdemomybatisplus.entity.dto.StudentDTO;
 import com.nihen.springbootdemomybatisplus.entity.po.Student;
 import com.nihen.springbootdemomybatisplus.entity.vo.StudentVO;
+import com.nihen.springbootdemomybatisplus.util.PageSelectDTO;
 
 import java.util.List;
 
@@ -40,4 +41,21 @@ public interface IStudentService extends IService<Student> {
      * @param ids 学生ID数组
      */
     void deleteStudent(Long[] ids);
+
+    /**
+     * 分页列表学生
+     * @param pageNo 当前页
+     * @param pageSize 每页大小
+     * @return List<StudentVO>
+     */
+    PageSelectDTO<StudentVO> selectStudentByPage(Integer pageNo, Integer pageSize);
+
+    /**
+     * 分页搜索学生信息
+     * @param pageNo 当前页
+     * @param pageSize 每页大小
+     * @param studentDTO 学生接收实体对象
+     * @return PageSelectDTO<StudentVO>
+     */
+    PageSelectDTO<StudentVO> searchStudentByPage(Integer pageNo, Integer pageSize, StudentDTO studentDTO);
 }

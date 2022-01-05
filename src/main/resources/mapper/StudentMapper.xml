@@ -1,5 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.nihen.springbootdemomybatisplus.mapper.StudentMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.nihen.springbootdemomybatisplus.entity.po.Student">
+        <id column="sid" property="sid" />
+        <result column="sname" property="sname" />
+        <result column="sex" property="sex" />
+        <result column="age" property="age" />
+        <result column="addr" property="addr" />
+    </resultMap>
+
+<!--    模糊查询带分页-->
+    <select id="searchStudentByPage" resultType="com.nihen.springbootdemomybatisplus.entity.vo.StudentVO">
+            SELECT
+                s.sid,s.sname,s.sex,s.age,s.addr,c.cname
+            FROM student s
+                     LEFT JOIN student_classes sc ON sc.sid=  s.sid
+                     RIGHT JOIN classes c ON  sc.cid = c.cid
+            WHERE 1 = 1
+                  <if test="param3 != null and param3 >0">
+                     and s.sid = #{param3}
+                  </if>
+
+                  <if test="param4 != null and param4 !=''">
+                      and  s.sname = #{param4}
+                  </if>
+
+                    <if test="param5 != null and param5 !=''">
+                        and  s.sex = #{param5}
+                    </if>
+
+                    <if test=" param6 >0">
+                        and  s.age = #{param6}
+                    </if>
+
+                    <if test="param7 != null and param7 !=''">
+                        and   s.addr LIKE "%" #{param7} "%"
+                    </if>
+
+                    <if test="param8 != null and param8 !=''">
+                        and  c.cname = #{param8}
+                    </if>
+
+                LIMIT #{param1},#{param2};
+    </select>
+
 
 </mapper>

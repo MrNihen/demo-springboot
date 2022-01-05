@@ -143,7 +143,7 @@ public class ClassesServiceImpl extends ServiceImpl<ClassesMapper, Classes> impl
 
     @Override
     public void deleteClassesByIds(Long[] ids) {
-        log.info("delectClassesByIds start ids ={}",ids);
+        log.info("deleteClassesByIds start ids ={}",ids);
         //高效数组转list集合
         ArrayList<Long> longList = new ArrayList<>(ids.length);
         Collections.addAll(longList,ids);
